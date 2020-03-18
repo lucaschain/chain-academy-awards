@@ -40,6 +40,7 @@ func main() {
 		_ = json.Unmarshal([]byte(file), &messages)
 
 		showAwardResult("most blockchains", messages, winning_categories.MostBlockchains)
+		showAwardResult("most replies", messages, winning_categories.MostReplies)
 	} else {
 		generateOutput()
 	}
