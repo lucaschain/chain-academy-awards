@@ -4,14 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 
-	"github.com/lucaschain/chain-academy-awards/cmd"
+	"github.com/lucaschain/chain-academy-awards/slack"
 )
 
-func main() {
-	messages := []cmd.Message{}
+func generateOutput() {
+	messages := []slack.Message{}
 
-	cmd.Fetch("development", func(message cmd.Message) {
+	slack.Fetch("development", func(message slack.Message) {
 		messages = append(messages, message)
 
 		fmt.Printf("%s: %s (%d blockchains)\n", message.User, message.Text, message.Blockchains)
@@ -22,4 +23,12 @@ func main() {
 
 	json, _ := json.Marshal(messages)
 	_ = ioutil.WriteFile("output.json", json, 0644)
+}
+
+func main() {
+	if _, err := os.Stat("output.json"); err == nil {
+		fmt.Printf("File exists\n")
+	} else {
+		generateOutput()
+	}
 }

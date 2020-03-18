@@ -1,4 +1,4 @@
-package cmd
+package slack
 
 type Awardable struct {
 	Text        string

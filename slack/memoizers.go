@@ -1,4 +1,4 @@
-package cmd
+package slack
 
 import (
 	"github.com/slack-go/slack"
