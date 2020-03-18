@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/lucaschain/chain-academy-awards/slack"
 	"github.com/lucaschain/chain-academy-awards/winning_categories"
@@ -28,20 +29,45 @@ func generateOutput() {
 		messages = append(messages, message)
 	})
 
-	json, _ := json.Marshal(messages)
-	_ = ioutil.WriteFile("output.json", json, 0644)
+	json, err := json.Marshal(messages)
+	if err != nil {
+		fmt.Println("could not marshal json:", err)
+		os.Exit(1)
+	}
+
+	err = ioutil.WriteFile("output.json", json, 0644)
+
+	if err != nil {
+		fmt.Println("could not save file:", err)
+		os.Exit(1)
+	}
+}
+
+func showAwards() {
+	file, err := ioutil.ReadFile("output.json")
+
+	if err != nil {
+		fmt.Println("could not load file:", err)
+		os.Exit(1)
+	}
+
+	messages := []slack.Message{}
+	err = json.Unmarshal([]byte(file), &messages)
+	if err != nil {
+		fmt.Println("could not unmarshal json:", err)
+		os.Exit(1)
+	}
+
+	showAwardResult("most blockchains", messages, winning_categories.MostBlockchains)
+	showAwardResult("most replies", messages, winning_categories.MostReplies)
 }
 
 func main() {
-	file, err := ioutil.ReadFile("output.json")
+	_, err := os.Stat("output.json")
 
-	if err == nil {
-		messages := []slack.Message{}
-		_ = json.Unmarshal([]byte(file), &messages)
-
-		showAwardResult("most blockchains", messages, winning_categories.MostBlockchains)
-		showAwardResult("most replies", messages, winning_categories.MostReplies)
-	} else {
+	if err != nil {
 		generateOutput()
 	}
+
+	showAwards()
 }
