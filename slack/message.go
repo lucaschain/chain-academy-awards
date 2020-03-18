@@ -1,5 +1,9 @@
 package slack
 
+import (
+	"fmt"
+)
+
 type Awardable struct {
 	Text        string
 	Blockchains int
@@ -34,4 +38,11 @@ func NewMessage(text string, blockchains int, user string, replies []Reply) Mess
 	msg.Replies = replies
 
 	return msg
+}
+
+func (message *Message) Print() {
+	fmt.Printf("%s: %s (%d blockchains)\n", message.User, message.Text, message.Blockchains)
+	for _, reply := range message.Replies {
+		fmt.Printf("    - %s: %s (%d blockchains)\n", reply.User, reply.Text, reply.Blockchains)
+	}
 }
