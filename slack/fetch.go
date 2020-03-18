@@ -8,6 +8,8 @@ import (
 	"github.com/slack-go/slack"
 )
 
+// Fetch uses the Slack API to find messages and its replies
+// it calls resultCallback once per message found
 func Fetch(channelName string, resultCallback func(Message)) {
 	api := slack.New(os.Getenv("SLACK_TOKEN"), slack.OptionDebug(true))
 
