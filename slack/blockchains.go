@@ -17,7 +17,7 @@ func blockchainsForMessage(api *slack.Client, channel *slack.Channel, ts string)
 
 	blockchains := 0
 	for _, r := range msgReactions {
-		if r.Name == "sunglasses" {
+		if r.Name == "blockchain" {
 			blockchains = r.Count
 		}
 	}

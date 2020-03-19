@@ -25,7 +25,7 @@ func showAwardResult(awardName string, messages []slack.Message, counter AwardCo
 func generateOutput() {
 	messages := []slack.Message{}
 
-	slack.Fetch("development", func(message slack.Message) {
+	slack.Fetch("chain-academy", func(message slack.Message) {
 		messages = append(messages, message)
 	})
 
