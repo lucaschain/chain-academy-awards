@@ -1,25 +1,32 @@
 package slack
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/slack-go/slack"
 )
 
 func blockchainsForMessage(api *slack.Client, channel *slack.Channel, ts string) int {
 	msgRef := slack.NewRefToMessage(channel.ID, ts)
-	msgReactions, err := api.GetReactions(msgRef, slack.NewGetReactionsParameters())
+	retries := 0
+	for {
+		msgReactions, err := api.GetReactions(msgRef, slack.NewGetReactionsParameters())
 
-	if err != nil {
-		fmt.Printf("Error getting reactions: %s\n", err)
-		return 0
-	}
-
-	blockchains := 0
-	for _, r := range msgReactions {
-		if r.Name == "blockchain" {
-			blockchains = r.Count
+		if err != nil {
+			log.Printf("error getting reactions: %s, retry %d\n", err, retries)
+			retries += 1
+			continue
 		}
+
+		blockchains := 0
+		for _, r := range msgReactions {
+			if r.Name == "blockchain" {
+				blockchains = r.Count
+			}
+		}
+
+		log.Println("done")
+
+		return blockchains
 	}
-	return blockchains
 }

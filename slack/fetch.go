@@ -1,9 +1,10 @@
 package slack
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/slack-go/slack"
@@ -19,7 +20,7 @@ func Fetch(channelName string, resultCallback func(Message)) {
 	channel := findAndJoinChannel(api, channelName)
 
 	if channel == nil {
-		fmt.Println("Channel not found :'(")
+		log.Println("Channel not found :'(")
 		return
 	}
 
@@ -29,7 +30,7 @@ func Fetch(channelName string, resultCallback func(Message)) {
 	messages, channelHistoryErr := getChannelHistory(api, channel, startDate, endDate)
 
 	if channelHistoryErr != nil {
-		fmt.Printf("error getting channel history: %s\n", channelHistoryErr)
+		log.Printf("error getting channel history: %s\n", channelHistoryErr)
 	}
 
 	memoizedUserInfo := createUserMemoizer(api)
@@ -38,7 +39,13 @@ func Fetch(channelName string, resultCallback func(Message)) {
 		user, err := memoizedUserInfo(msg.User)
 
 		if err == nil {
-			log.Println("fetching message info")
+			timestamp := strings.SplitN(msg.Timestamp, ".", -1)
+			unixTimestamp, err := strconv.ParseInt(timestamp[0], 10, 64)
+			if err != nil {
+				panic(err)
+			}
+			time := time.Unix(unixTimestamp, 0)
+			log.Printf("Fetching info for message in date: %s\n", time)
 			permalink, _ := api.GetPermalink(&slack.PermalinkParameters{
 				Ts:      msg.Timestamp,
 				Channel: channel.ID,

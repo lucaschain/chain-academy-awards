@@ -1,7 +1,6 @@
 package slack
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -11,17 +10,17 @@ import (
 
 func findAndJoinChannel(api *slack.Client, channelName string) *slack.Channel {
 	conversationsParam := &slack.GetConversationsParameters{
-		Limit: 10,
+		Limit: 1000, // TODO fix this
+		Types: []string{"public_channel"},
 	}
 	channels, _, err := api.GetConversations(conversationsParam)
 
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		log.Printf("%s\n", err)
 	}
 
 	var channel slack.Channel
 	for _, c := range channels {
-
 		if c.Name == channelName {
 			channel = c
 			break
@@ -35,7 +34,7 @@ func findAndJoinChannel(api *slack.Client, channelName string) *slack.Channel {
 	_, _, _, err = api.JoinConversation(channel.ID)
 
 	if err != nil {
-		fmt.Printf("error joining: %s\n", err)
+		log.Printf("error joining: %s\n", err)
 		return nil
 	}
 
@@ -58,7 +57,8 @@ func getChannelHistory(api *slack.Client, channel *slack.Channel, from time.Time
 
 		history, channelHistoryErr := api.GetConversationHistory(conversationHistoryParams)
 		if channelHistoryErr != nil {
-			return messages, fmt.Errorf("error getting channel history: %s\n", channelHistoryErr)
+			log.Printf("error getting channel history: %s\n", channelHistoryErr)
+			continue
 		}
 
 		for _, msg := range history.Messages {
