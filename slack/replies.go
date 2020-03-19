@@ -2,6 +2,7 @@ package slack
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/slack-go/slack"
 )
@@ -9,6 +10,7 @@ import (
 func repliesForMessage(api *slack.Client, channel *slack.Channel, msg slack.Message, userMemoizer func(string) (*slack.User, error)) []Reply {
 	replies := []Reply{}
 
+	log.Println("fetching message replies")
 	for _, reply := range msg.Replies {
 		ts := reply.Timestamp
 		conversationRepliesParams := &slack.GetConversationRepliesParameters{
@@ -19,6 +21,7 @@ func repliesForMessage(api *slack.Client, channel *slack.Channel, msg slack.Mess
 
 		if err == nil {
 			for _, replyMsg := range replyMessages {
+				log.Println("fetching reply")
 				userInfo, _ := userMemoizer(replyMsg.User)
 
 				replies = append(replies, NewReply(

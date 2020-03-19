@@ -2,6 +2,7 @@ package slack
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -47,6 +48,7 @@ func getChannelHistory(api *slack.Client, channel *slack.Channel, from time.Time
 	cursor := ""
 
 	for {
+		log.Println("new history batch")
 		conversationHistoryParams := &slack.GetConversationHistoryParameters{
 			ChannelID: channel.ID,
 			Cursor:    cursor,

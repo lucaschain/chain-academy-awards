@@ -12,7 +12,8 @@ type Awardable struct {
 
 type Message struct {
 	Awardable
-	Replies []Reply
+	Permalink string
+	Replies   []Reply
 }
 
 type Reply struct {
@@ -29,18 +30,20 @@ func NewReply(text string, blockchains int, user string) Reply {
 	return reply
 }
 
-func NewMessage(text string, blockchains int, user string, replies []Reply) Message {
+func NewMessage(text string, blockchains int, user string, replies []Reply, permalink string) Message {
 	msg := Message{}
 
 	msg.Text = text
 	msg.Blockchains = blockchains
 	msg.User = user
 	msg.Replies = replies
+	msg.Permalink = permalink
 
 	return msg
 }
 
 func (message *Message) Print() {
+	fmt.Println(message.Permalink)
 	fmt.Printf("%s: %s (%d blockchains)\n", message.User, message.Text, message.Blockchains)
 	for _, reply := range message.Replies {
 		fmt.Printf("    - %s: %s (%d blockchains)\n", reply.User, reply.Text, reply.Blockchains)
