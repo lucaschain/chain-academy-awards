@@ -58,8 +58,23 @@ func showAwards() {
 		os.Exit(1)
 	}
 
-	showAwardResult("most blockchains", messages, winning_categories.MostBlockchains)
-	showAwardResult("most replies", messages, winning_categories.MostReplies)
+	showAwardResult(
+		"most blockchains",
+		messages,
+		winning_categories.MostBlockchains,
+	)
+
+	showAwardResult(
+		"most replies",
+		messages,
+		winning_categories.MostReplies,
+	)
+
+	showAwardResult(
+		"most blockchains in thread",
+		messages,
+		winning_categories.MostBlockchainsInThread,
+	)
 }
 
 func main() {
