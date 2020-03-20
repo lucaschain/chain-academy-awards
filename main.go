@@ -63,6 +63,7 @@ func showAwards() {
 		"most replies":                winning_categories.MostReplies,
 		"most blockchains in thread":  winning_categories.MostBlockchainsInThread,
 		"most blockchains in comment": winning_categories.MostBlockchainsInComment,
+		"most active user":            winning_categories.MostActiveUser,
 	}
 
 	for name, counter := range awards {
