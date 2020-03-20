@@ -59,9 +59,10 @@ func showAwards() {
 	}
 
 	awards := map[string]AwardCounter{
-		"most blockchains":           winning_categories.MostBlockchains,
-		"most replies":               winning_categories.MostReplies,
-		"most blockchains in thread": winning_categories.MostBlockchainsInThread,
+		"most blockchains":            winning_categories.MostBlockchains,
+		"most replies":                winning_categories.MostReplies,
+		"most blockchains in thread":  winning_categories.MostBlockchainsInThread,
+		"most blockchains in comment": winning_categories.MostBlockchainsInComment,
 	}
 
 	for name, counter := range awards {
